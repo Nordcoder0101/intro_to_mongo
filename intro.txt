@@ -1,0 +1,900 @@
+> use my_first_db
+switched to db my_first_db
+> db
+my_first_db
+> db.my_first_db.insert(name: "Greg", home_state: "Wisconsin", lucky_number: 7, birthday: {month: 10, day: 19, year: 1982})
+2019-01-14T10:30:38.761-0800 E QUERY    [thread1] SyntaxError: missing ) after argument list @(shell):1:26
+> db.my_first_db.insert({name: "Greg", home_state: "Wisconsin", lucky_number: 7, birthday: {month: 10, day: 19, year: 1982}})
+WriteResult({ "nInserted" : 1 })
+> db.my_first_db.find()
+{ "_id" : ObjectId("5c3cd597c25ceb17a3c30775"), "name" : "Greg", "home_state" : "Wisconsin", "lucky_number" : 7, "birthday" : { "month" : 10, "day" : 19, "year" : 1982 } }
+> db.my_first_db.insert({name: "Bob", home_state: "Wyoming", lucky_number: 2, birthday: {month: 1, day: 1, year: 1984}})
+WriteResult({ "nInserted" : 1 })
+> db.my_first_db.insert({name: "Gabe", home_state: "West Virginia", lucky_number: 0, birthday: {month: 9, day: 12, year: 1966}})
+WriteResult({ "nInserted" : 1 })
+> db.my_first_db.find()
+{ "_id" : ObjectId("5c3cd597c25ceb17a3c30775"), "name" : "Greg", "home_state" : "Wisconsin", "lucky_number" : 7, "birthday" : { "month" : 10, "day" : 19, "year" : 1982 } }
+{ "_id" : ObjectId("5c3cd5ebc25ceb17a3c30776"), "name" : "Bob", "home_state" : "Wyoming", "lucky_number" : 2, "birthday" : { "month" : 1, "day" : 1, "year" : 1984 } }
+{ "_id" : ObjectId("5c3cd61cc25ceb17a3c30777"), "name" : "Gabe", "home_state" : "West Virginia", "lucky_number" : 0, "birthday" : { "month" : 9, "day" : 12, "year" : 1966 } }
+> db.my_first_db.insert({name: "Harold", home_state: "Washington", lucky_number: 100, birthday: {month: 7, day: 2, year: 1920}})
+WriteResult({ "nInserted" : 1 })
+> db.my_first_db.insert({name: "Gracia", home_state: "Maine", lucky_number: 1, birthday: {month: 12, day: 26, year: 2001}})
+WriteResult({ "nInserted" : 1 })
+> db.my_first_db.find({home_state: "Washington"})
+{ "_id" : ObjectId("5c3cd696c25ceb17a3c30778"), "name" : "Harold", "home_state" : "Washington", "lucky_number" : 100, "birthday" : { "month" : 7, "day" : 2, "year" : 1920 } }
+> db.my_first_db.find({lucky_number: {$gt:3}})
+{ "_id" : ObjectId("5c3cd597c25ceb17a3c30775"), "name" : "Greg", "home_state" : "Wisconsin", "lucky_number" : 7, "birthday" : { "month" : 10, "day" : 19, "year" : 1982 } }
+{ "_id" : ObjectId("5c3cd696c25ceb17a3c30778"), "name" : "Harold", "home_state" : "Washington", "lucky_number" : 100, "birthday" : { "month" : 7, "day" : 2, "year" : 1920 } }
+> db.my_first_db.find({lucky_number: {$gt:3}}).pretty()
+{
+	"_id" : ObjectId("5c3cd597c25ceb17a3c30775"),
+	"name" : "Greg",
+	"home_state" : "Wisconsin",
+	"lucky_number" : 7,
+	"birthday" : {
+		"month" : 10,
+		"day" : 19,
+		"year" : 1982
+	}
+}
+{
+	"_id" : ObjectId("5c3cd696c25ceb17a3c30778"),
+	"name" : "Harold",
+	"home_state" : "Washington",
+	"lucky_number" : 100,
+	"birthday" : {
+		"month" : 7,
+		"day" : 2,
+		"year" : 1920
+	}
+}
+> db.my_first_db.find({lucky_number: {$gte:10}}).pretty()
+{
+	"_id" : ObjectId("5c3cd696c25ceb17a3c30778"),
+	"name" : "Harold",
+	"home_state" : "Washington",
+	"lucky_number" : 100,
+	"birthday" : {
+		"month" : 7,
+		"day" : 2,
+		"year" : 1920
+	}
+}
+> db.my_first_db.find({lucky_number: {$gt:1 $and $lt10}}).pretty()
+2019-01-14T10:47:31.357-0800 E QUERY    [thread1] SyntaxError: missing } after property list @(shell):1:42
+> db.my_first_db.find({lucky_number: {$range: 1,9}).pretty()
+...
+... db.my_first_db.find({lucky_number: {$gt:1 $and $lt10}}).pretty()
+... db.my_first_db.find({lucky_number: {$gt:1 $and $lt10}}).pretty()
+... db.my_first_db.find({lucky_number: {$gte:10}}).pretty()
+...
+...
+>
+> db.my_first_db.find({lucky_number: {$range:[ 1, 9, 1]}).pretty()
+...
+...
+> db.my_first_db.find({lucky_number: { $range:[ 1,9, 1]}}).pretty()
+Error: error: {
+	"ok" : 0,
+	"errmsg" : "unknown operator: $range",
+	"code" : 2,
+	"codeName" : "BadValue"
+}
+> db.my_first_db.find( {$and: [{lucky_number: {$gte:1}}, {lucky_number: {$lte:9}}])
+...
+...
+>
+> db.my_first.db.find( {lucky_number: {$lte: 9, $gte: 1 }})
+> .find().pretty()
+2019-01-14T10:58:12.874-0800 E QUERY    [thread1] SyntaxError: expected expression, got '.' @(shell):1:0
+> db.my_first_db.find().pretty()
+{
+	"_id" : ObjectId("5c3cd597c25ceb17a3c30775"),
+	"name" : "Greg",
+	"home_state" : "Wisconsin",
+	"lucky_number" : 7,
+	"birthday" : {
+		"month" : 10,
+		"day" : 19,
+		"year" : 1982
+	}
+}
+{
+	"_id" : ObjectId("5c3cd5ebc25ceb17a3c30776"),
+	"name" : "Bob",
+	"home_state" : "Wyoming",
+	"lucky_number" : 2,
+	"birthday" : {
+		"month" : 1,
+		"day" : 1,
+		"year" : 1984
+	}
+}
+{
+	"_id" : ObjectId("5c3cd61cc25ceb17a3c30777"),
+	"name" : "Gabe",
+	"home_state" : "West Virginia",
+	"lucky_number" : 0,
+	"birthday" : {
+		"month" : 9,
+		"day" : 12,
+		"year" : 1966
+	}
+}
+{
+	"_id" : ObjectId("5c3cd696c25ceb17a3c30778"),
+	"name" : "Harold",
+	"home_state" : "Washington",
+	"lucky_number" : 100,
+	"birthday" : {
+		"month" : 7,
+		"day" : 2,
+		"year" : 1920
+	}
+}
+{
+	"_id" : ObjectId("5c3cd6f3c25ceb17a3c30779"),
+	"name" : "Gracia",
+	"home_state" : "Maine",
+	"lucky_number" : 1,
+	"birthday" : {
+		"month" : 12,
+		"day" : 26,
+		"year" : 2001
+	}
+}
+> db.my_first_db.find({lucky_number: {$range: 1,9}).pretty()
+...
+...
+> db.my_first_db.find( {lucky_number: {$lte: 9, $gte: 1 }})
+{ "_id" : ObjectId("5c3cd597c25ceb17a3c30775"), "name" : "Greg", "home_state" : "Wisconsin", "lucky_number" : 7, "birthday" : { "month" : 10, "day" : 19, "year" : 1982 } }
+{ "_id" : ObjectId("5c3cd5ebc25ceb17a3c30776"), "name" : "Bob", "home_state" : "Wyoming", "lucky_number" : 2, "birthday" : { "month" : 1, "day" : 1, "year" : 1984 } }
+{ "_id" : ObjectId("5c3cd6f3c25ceb17a3c30779"), "name" : "Gracia", "home_state" : "Maine", "lucky_number" : 1, "birthday" : { "month" : 12, "day" : 26, "year" : 2001 } }
+> db.my_first_db.update({}, {$set: {interests: ["coding", "brunch", "MongoDB"]}})
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+> db.my_first_db.find().pretty()
+{
+	"_id" : ObjectId("5c3cd597c25ceb17a3c30775"),
+	"name" : "Greg",
+	"home_state" : "Wisconsin",
+	"lucky_number" : 7,
+	"birthday" : {
+		"month" : 10,
+		"day" : 19,
+		"year" : 1982
+	},
+	"interests" : [
+		"coding",
+		"brunch",
+		"MongoDB"
+	]
+}
+{
+	"_id" : ObjectId("5c3cd5ebc25ceb17a3c30776"),
+	"name" : "Bob",
+	"home_state" : "Wyoming",
+	"lucky_number" : 2,
+	"birthday" : {
+		"month" : 1,
+		"day" : 1,
+		"year" : 1984
+	}
+}
+{
+	"_id" : ObjectId("5c3cd61cc25ceb17a3c30777"),
+	"name" : "Gabe",
+	"home_state" : "West Virginia",
+	"lucky_number" : 0,
+	"birthday" : {
+		"month" : 9,
+		"day" : 12,
+		"year" : 1966
+	}
+}
+{
+	"_id" : ObjectId("5c3cd696c25ceb17a3c30778"),
+	"name" : "Harold",
+	"home_state" : "Washington",
+	"lucky_number" : 100,
+	"birthday" : {
+		"month" : 7,
+		"day" : 2,
+		"year" : 1920
+	}
+}
+{
+	"_id" : ObjectId("5c3cd6f3c25ceb17a3c30779"),
+	"name" : "Gracia",
+	"home_state" : "Maine",
+	"lucky_number" : 1,
+	"birthday" : {
+		"month" : 12,
+		"day" : 26,
+		"year" : 2001
+	}
+}
+> db.my_first_db.update({}, {$set: {"interests": "coding", "brunch", "MongoDB"}})
+2019-01-14T11:05:31.821-0800 E QUERY    [thread1] SyntaxError: missing : after property id @(shell):1:65
+> db.my_first_db.update({}, {$set: {"interests": ["coding", "brunch", "MongoDB"]}})
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 0 })
+> db.my_first_db.find().pretty()
+{
+	"_id" : ObjectId("5c3cd597c25ceb17a3c30775"),
+	"name" : "Greg",
+	"home_state" : "Wisconsin",
+	"lucky_number" : 7,
+	"birthday" : {
+		"month" : 10,
+		"day" : 19,
+		"year" : 1982
+	},
+	"interests" : [
+		"coding",
+		"brunch",
+		"MongoDB"
+	]
+}
+{
+	"_id" : ObjectId("5c3cd5ebc25ceb17a3c30776"),
+	"name" : "Bob",
+	"home_state" : "Wyoming",
+	"lucky_number" : 2,
+	"birthday" : {
+		"month" : 1,
+		"day" : 1,
+		"year" : 1984
+	}
+}
+{
+	"_id" : ObjectId("5c3cd61cc25ceb17a3c30777"),
+	"name" : "Gabe",
+	"home_state" : "West Virginia",
+	"lucky_number" : 0,
+	"birthday" : {
+		"month" : 9,
+		"day" : 12,
+		"year" : 1966
+	}
+}
+{
+	"_id" : ObjectId("5c3cd696c25ceb17a3c30778"),
+	"name" : "Harold",
+	"home_state" : "Washington",
+	"lucky_number" : 100,
+	"birthday" : {
+		"month" : 7,
+		"day" : 2,
+		"year" : 1920
+	}
+}
+{
+	"_id" : ObjectId("5c3cd6f3c25ceb17a3c30779"),
+	"name" : "Gracia",
+	"home_state" : "Maine",
+	"lucky_number" : 1,
+	"birthday" : {
+		"month" : 12,
+		"day" : 26,
+		"year" : 2001
+	}
+}
+> db.my_first_db.update({}, {$set: {"interests": ["coding", "brunch", "MongoDB"]}}false, true)
+2019-01-14T11:06:51.081-0800 E QUERY    [thread1] SyntaxError: missing ) after argument list @(shell):1:80
+> db.my_first_db.update({}, {$set: {"interests": ["coding", "brunch", "MongoDB"]}},{ upsert:true, multi:true})
+WriteResult({ "nMatched" : 5, "nUpserted" : 0, "nModified" : 4 })
+> db.my_first_db.find().pretty()
+{
+	"_id" : ObjectId("5c3cd597c25ceb17a3c30775"),
+	"name" : "Greg",
+	"home_state" : "Wisconsin",
+	"lucky_number" : 7,
+	"birthday" : {
+		"month" : 10,
+		"day" : 19,
+		"year" : 1982
+	},
+	"interests" : [
+		"coding",
+		"brunch",
+		"MongoDB"
+	]
+}
+{
+	"_id" : ObjectId("5c3cd5ebc25ceb17a3c30776"),
+	"name" : "Bob",
+	"home_state" : "Wyoming",
+	"lucky_number" : 2,
+	"birthday" : {
+		"month" : 1,
+		"day" : 1,
+		"year" : 1984
+	},
+	"interests" : [
+		"coding",
+		"brunch",
+		"MongoDB"
+	]
+}
+{
+	"_id" : ObjectId("5c3cd61cc25ceb17a3c30777"),
+	"name" : "Gabe",
+	"home_state" : "West Virginia",
+	"lucky_number" : 0,
+	"birthday" : {
+		"month" : 9,
+		"day" : 12,
+		"year" : 1966
+	},
+	"interests" : [
+		"coding",
+		"brunch",
+		"MongoDB"
+	]
+}
+{
+	"_id" : ObjectId("5c3cd696c25ceb17a3c30778"),
+	"name" : "Harold",
+	"home_state" : "Washington",
+	"lucky_number" : 100,
+	"birthday" : {
+		"month" : 7,
+		"day" : 2,
+		"year" : 1920
+	},
+	"interests" : [
+		"coding",
+		"brunch",
+		"MongoDB"
+	]
+}
+{
+	"_id" : ObjectId("5c3cd6f3c25ceb17a3c30779"),
+	"name" : "Gracia",
+	"home_state" : "Maine",
+	"lucky_number" : 1,
+	"birthday" : {
+		"month" : 12,
+		"day" : 26,
+		"year" : 2001
+	},
+	"interests" : [
+		"coding",
+		"brunch",
+		"MongoDB"
+	]
+}
+> db.my_first_db.update({name: "Greg}, {$set : {"interests": "Rocket League"}})
+
+2019-01-14T11:11:08.969-0800 E QUERY    [thread1] SyntaxError: missing } after property list @(shell):1:47
+> db.my_first_db.update({name: "Greg}, {$push : {"interests": "Rocket League"}})
+
+2019-01-14T11:12:13.862-0800 E QUERY    [thread1] SyntaxError: missing } after property list @(shell):1:48
+> db.my_first_db.update({name: "Greg"}, {$push : {"interests": "Rocket League"}})
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+> db.my_first_db.find().pretty()
+{
+	"_id" : ObjectId("5c3cd597c25ceb17a3c30775"),
+	"name" : "Greg",
+	"home_state" : "Wisconsin",
+	"lucky_number" : 7,
+	"birthday" : {
+		"month" : 10,
+		"day" : 19,
+		"year" : 1982
+	},
+	"interests" : [
+		"coding",
+		"brunch",
+		"MongoDB",
+		"Rocket League"
+	]
+}
+{
+	"_id" : ObjectId("5c3cd5ebc25ceb17a3c30776"),
+	"name" : "Bob",
+	"home_state" : "Wyoming",
+	"lucky_number" : 2,
+	"birthday" : {
+		"month" : 1,
+		"day" : 1,
+		"year" : 1984
+	},
+	"interests" : [
+		"coding",
+		"brunch",
+		"MongoDB"
+	]
+}
+{
+	"_id" : ObjectId("5c3cd61cc25ceb17a3c30777"),
+	"name" : "Gabe",
+	"home_state" : "West Virginia",
+	"lucky_number" : 0,
+	"birthday" : {
+		"month" : 9,
+		"day" : 12,
+		"year" : 1966
+	},
+	"interests" : [
+		"coding",
+		"brunch",
+		"MongoDB"
+	]
+}
+{
+	"_id" : ObjectId("5c3cd696c25ceb17a3c30778"),
+	"name" : "Harold",
+	"home_state" : "Washington",
+	"lucky_number" : 100,
+	"birthday" : {
+		"month" : 7,
+		"day" : 2,
+		"year" : 1920
+	},
+	"interests" : [
+		"coding",
+		"brunch",
+		"MongoDB"
+	]
+}
+{
+	"_id" : ObjectId("5c3cd6f3c25ceb17a3c30779"),
+	"name" : "Gracia",
+	"home_state" : "Maine",
+	"lucky_number" : 1,
+	"birthday" : {
+		"month" : 12,
+		"day" : 26,
+		"year" : 2001
+	},
+	"interests" : [
+		"coding",
+		"brunch",
+		"MongoDB"
+	]
+}
+> db.my_first_db.update({name: "Greg"}, {$push : {"interests": "Taxes"}})
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+> db.my_first_db.update({name: "Greg"}, {$pull : {"interests": "Taxes"}})
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+> db.my_first_db.remove({name:"Gracia"})
+WriteResult({ "nRemoved" : 1 })
+> db.my_first_db.find().pretty()
+{
+	"_id" : ObjectId("5c3cd597c25ceb17a3c30775"),
+	"name" : "Greg",
+	"home_state" : "Wisconsin",
+	"lucky_number" : 7,
+	"birthday" : {
+		"month" : 10,
+		"day" : 19,
+		"year" : 1982
+	},
+	"interests" : [
+		"coding",
+		"brunch",
+		"MongoDB",
+		"Rocket League"
+	]
+}
+{
+	"_id" : ObjectId("5c3cd5ebc25ceb17a3c30776"),
+	"name" : "Bob",
+	"home_state" : "Wyoming",
+	"lucky_number" : 2,
+	"birthday" : {
+		"month" : 1,
+		"day" : 1,
+		"year" : 1984
+	},
+	"interests" : [
+		"coding",
+		"brunch",
+		"MongoDB"
+	]
+}
+{
+	"_id" : ObjectId("5c3cd61cc25ceb17a3c30777"),
+	"name" : "Gabe",
+	"home_state" : "West Virginia",
+	"lucky_number" : 0,
+	"birthday" : {
+		"month" : 9,
+		"day" : 12,
+		"year" : 1966
+	},
+	"interests" : [
+		"coding",
+		"brunch",
+		"MongoDB"
+	]
+}
+{
+	"_id" : ObjectId("5c3cd696c25ceb17a3c30778"),
+	"name" : "Harold",
+	"home_state" : "Washington",
+	"lucky_number" : 100,
+	"birthday" : {
+		"month" : 7,
+		"day" : 2,
+		"year" : 1920
+	},
+	"interests" : [
+		"coding",
+		"brunch",
+		"MongoDB"
+	]
+}
+> db.my_first_db.remove({"lucky_number": {$gt: 5}, true)
+...
+...
+> db.my_first_db.remove({"lucky_number": {$gt: 5}}, true)
+WriteResult({ "nRemoved" : 1 })
+> db.my_first_db.find().pretty()
+{
+	"_id" : ObjectId("5c3cd5ebc25ceb17a3c30776"),
+	"name" : "Bob",
+	"home_state" : "Wyoming",
+	"lucky_number" : 2,
+	"birthday" : {
+		"month" : 1,
+		"day" : 1,
+		"year" : 1984
+	},
+	"interests" : [
+		"coding",
+		"brunch",
+		"MongoDB"
+	]
+}
+{
+	"_id" : ObjectId("5c3cd61cc25ceb17a3c30777"),
+	"name" : "Gabe",
+	"home_state" : "West Virginia",
+	"lucky_number" : 0,
+	"birthday" : {
+		"month" : 9,
+		"day" : 12,
+		"year" : 1966
+	},
+	"interests" : [
+		"coding",
+		"brunch",
+		"MongoDB"
+	]
+}
+{
+	"_id" : ObjectId("5c3cd696c25ceb17a3c30778"),
+	"name" : "Harold",
+	"home_state" : "Washington",
+	"lucky_number" : 100,
+	"birthday" : {
+		"month" : 7,
+		"day" : 2,
+		"year" : 1920
+	},
+	"interests" : [
+		"coding",
+		"brunch",
+		"MongoDB"
+	]
+}
+> db.my_first_db.update({}, {$set: {belts_earned: 0}} true, true)
+2019-01-14T11:39:26.176-0800 E QUERY    [thread1] SyntaxError: missing ) after argument list @(shell):1:52
+> db.my_first_db.update({}, {$set: {belts_earned: 0}} upsert: true, multi: true)
+
+2019-01-14T11:39:56.149-0800 E QUERY    [thread1] SyntaxError: missing ) after argument list @(shell):1:52
+> db.my_first_db.update({}, {$set: {belts_earned: 0}} {upsert: true, multi: true})
+2019-01-14T11:40:29.060-0800 E QUERY    [thread1] SyntaxError: missing ) after argument list @(shell):1:52
+> db.my_first_db.update({}, {$set: {"belts_earned": 0}}, {upsert: true, multi: true})
+WriteResult({ "nMatched" : 3, "nUpserted" : 0, "nModified" : 3 })
+> db.my_first_db.find().pretty()
+{
+	"_id" : ObjectId("5c3cd5ebc25ceb17a3c30776"),
+	"name" : "Bob",
+	"home_state" : "Wyoming",
+	"lucky_number" : 2,
+	"birthday" : {
+		"month" : 1,
+		"day" : 1,
+		"year" : 1984
+	},
+	"interests" : [
+		"coding",
+		"brunch",
+		"MongoDB"
+	],
+	"belts_earned" : 0
+}
+{
+	"_id" : ObjectId("5c3cd61cc25ceb17a3c30777"),
+	"name" : "Gabe",
+	"home_state" : "West Virginia",
+	"lucky_number" : 0,
+	"birthday" : {
+		"month" : 9,
+		"day" : 12,
+		"year" : 1966
+	},
+	"interests" : [
+		"coding",
+		"brunch",
+		"MongoDB"
+	],
+	"belts_earned" : 0
+}
+{
+	"_id" : ObjectId("5c3cd696c25ceb17a3c30778"),
+	"name" : "Harold",
+	"home_state" : "Washington",
+	"lucky_number" : 100,
+	"birthday" : {
+		"month" : 7,
+		"day" : 2,
+		"year" : 1920
+	},
+	"interests" : [
+		"coding",
+		"brunch",
+		"MongoDB"
+	],
+	"belts_earned" : 0
+}
+> db.my_first_db({}, {$inc: {"belts_earned": 1}})
+2019-01-14T11:43:42.646-0800 E QUERY    [thread1] TypeError: db.my_first_db is not a function :
+@(shell):1:1
+> db.my_first_db.update({}, {$inc: {"belts_earned": 1}})
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+> db.my_first_db.update({}, {$inc: {"belts_earned": 1}}, {upsert: true, multi:true})
+WriteResult({ "nMatched" : 3, "nUpserted" : 0, "nModified" : 3 })
+> db.my_first_db.find().pretty()
+{
+	"_id" : ObjectId("5c3cd5ebc25ceb17a3c30776"),
+	"name" : "Bob",
+	"home_state" : "Wyoming",
+	"lucky_number" : 2,
+	"birthday" : {
+		"month" : 1,
+		"day" : 1,
+		"year" : 1984
+	},
+	"interests" : [
+		"coding",
+		"brunch",
+		"MongoDB"
+	],
+	"belts_earned" : 2
+}
+{
+	"_id" : ObjectId("5c3cd61cc25ceb17a3c30777"),
+	"name" : "Gabe",
+	"home_state" : "West Virginia",
+	"lucky_number" : 0,
+	"birthday" : {
+		"month" : 9,
+		"day" : 12,
+		"year" : 1966
+	},
+	"interests" : [
+		"coding",
+		"brunch",
+		"MongoDB"
+	],
+	"belts_earned" : 1
+}
+{
+	"_id" : ObjectId("5c3cd696c25ceb17a3c30778"),
+	"name" : "Harold",
+	"home_state" : "Washington",
+	"lucky_number" : 100,
+	"birthday" : {
+		"month" : 7,
+		"day" : 2,
+		"year" : 1920
+	},
+	"interests" : [
+		"coding",
+		"brunch",
+		"MongoDB"
+	],
+	"belts_earned" : 1
+}
+> db.my_first_db.update({}, { $rename: {"belts_earned": "total_belts_earned"}}, {upsert: true, multi: true})
+WriteResult({ "nMatched" : 3, "nUpserted" : 0, "nModified" : 3 })
+> db.my_first_db.find().pretty()
+{
+	"_id" : ObjectId("5c3cd5ebc25ceb17a3c30776"),
+	"name" : "Bob",
+	"home_state" : "Wyoming",
+	"lucky_number" : 2,
+	"birthday" : {
+		"month" : 1,
+		"day" : 1,
+		"year" : 1984
+	},
+	"interests" : [
+		"coding",
+		"brunch",
+		"MongoDB"
+	],
+	"total_belts_earned" : 2
+}
+{
+	"_id" : ObjectId("5c3cd61cc25ceb17a3c30777"),
+	"name" : "Gabe",
+	"home_state" : "West Virginia",
+	"lucky_number" : 0,
+	"birthday" : {
+		"month" : 9,
+		"day" : 12,
+		"year" : 1966
+	},
+	"interests" : [
+		"coding",
+		"brunch",
+		"MongoDB"
+	],
+	"total_belts_earned" : 1
+}
+{
+	"_id" : ObjectId("5c3cd696c25ceb17a3c30778"),
+	"name" : "Harold",
+	"home_state" : "Washington",
+	"lucky_number" : 100,
+	"birthday" : {
+		"month" : 7,
+		"day" : 2,
+		"year" : 1920
+	},
+	"interests" : [
+		"coding",
+		"brunch",
+		"MongoDB"
+	],
+	"total_belts_earned" : 1
+}
+> db.my_first_db.update({}, {$currentDate: {"updated_on": "$type": date}} {upsert: true, multi: true})
+2019-01-14T11:52:01.443-0800 E QUERY    [thread1] SyntaxError: missing } after property list @(shell):1:63
+> db.my_first_db.update({}, {$currentDate: {"updated_on": {"$type": date}}} {upsert: true, multi: true})
+2019-01-14T11:52:22.566-0800 E QUERY    [thread1] SyntaxError: missing ) after argument list @(shell):1:74
+> db.my_first_db.update({}, {$currentDate: {"updated_on": {"$type": date}}}, {upsert: true, multi: true})
+2019-01-14T11:54:56.065-0800 E QUERY    [thread1] ReferenceError: date is not defined :
+@(shell):1:58
+> db.my_first_db.update({}, {$currentDate: {"updated_on": {"$type": updated_on}}}, {upsert: true, multi: true})
+2019-01-14T11:55:10.597-0800 E QUERY    [thread1] ReferenceError: updated_on is not defined :
+@(shell):1:58
+> db.my_first_db.update({}, {$set: {"updated_on": 0}}, {upsert: true, multi: true})
+WriteResult({ "nMatched" : 3, "nUpserted" : 0, "nModified" : 3 })
+> db.my_first_db.update({}, {$currentDate: {"updated_on": {"$type": updated_on}}}, {upsert: true, multi: true})
+2019-01-14T11:56:05.658-0800 E QUERY    [thread1] ReferenceError: updated_on is not defined :
+@(shell):1:58
+> db.my_first_db.find().pretty()
+{
+	"_id" : ObjectId("5c3cd5ebc25ceb17a3c30776"),
+	"name" : "Bob",
+	"home_state" : "Wyoming",
+	"lucky_number" : 2,
+	"birthday" : {
+		"month" : 1,
+		"day" : 1,
+		"year" : 1984
+	},
+	"interests" : [
+		"coding",
+		"brunch",
+		"MongoDB"
+	],
+	"total_belts_earned" : 2,
+	"updated_on" : 0
+}
+{
+	"_id" : ObjectId("5c3cd61cc25ceb17a3c30777"),
+	"name" : "Gabe",
+	"home_state" : "West Virginia",
+	"lucky_number" : 0,
+	"birthday" : {
+		"month" : 9,
+		"day" : 12,
+		"year" : 1966
+	},
+	"interests" : [
+		"coding",
+		"brunch",
+		"MongoDB"
+	],
+	"total_belts_earned" : 1,
+	"updated_on" : 0
+}
+{
+	"_id" : ObjectId("5c3cd696c25ceb17a3c30778"),
+	"name" : "Harold",
+	"home_state" : "Washington",
+	"lucky_number" : 100,
+	"birthday" : {
+		"month" : 7,
+		"day" : 2,
+		"year" : 1920
+	},
+	"interests" : [
+		"coding",
+		"brunch",
+		"MongoDB"
+	],
+	"total_belts_earned" : 1,
+	"updated_on" : 0
+}
+> db.my_first_db.update({}, {$currentDate: {"updated_on": {"$type": "updated_on"}}}, {upsert: true, multi: true})
+WriteResult({
+	"nMatched" : 0,
+	"nUpserted" : 0,
+	"nModified" : 0,
+	"writeError" : {
+		"code" : 2,
+		"errmsg" : "The '$type' string field is required to be 'date' or 'timestamp': {$currentDate: {field : {$type: 'date'}}}"
+	}
+})
+> db.my_first_db.update({}, {$currentDate: {"updated_on": {"$type": date"}}}, {upsert: true, multi: true})
+2019-01-14T11:56:56.489-0800 E QUERY    [thread1] SyntaxError: unterminated string literal @(shell):1:70
+> db.my_first_db.update({}, {$currentDate: {updated_on: {"$type": date"}}}, {upsert: true, multi: true})
+2019-01-14T11:57:10.832-0800 E QUERY    [thread1] SyntaxError: unterminated string literal @(shell):1:68
+> db.my_first_db.update({}, {$currentDate: {updated_on: {"$type": date}}}, {upsert: true, multi: true})
+2019-01-14T11:57:19.701-0800 E QUERY    [thread1] ReferenceError: date is not defined :
+@(shell):1:56
+> db.my_first_db.update({}, {$set: {updated_on: new Date()}}, {upsert: true, multi: true})
+WriteResult({ "nMatched" : 3, "nUpserted" : 0, "nModified" : 3 })
+> db.my_first_db.find().pretty()
+{
+	"_id" : ObjectId("5c3cd5ebc25ceb17a3c30776"),
+	"name" : "Bob",
+	"home_state" : "Wyoming",
+	"lucky_number" : 2,
+	"birthday" : {
+		"month" : 1,
+		"day" : 1,
+		"year" : 1984
+	},
+	"interests" : [
+		"coding",
+		"brunch",
+		"MongoDB"
+	],
+	"total_belts_earned" : 2,
+	"updated_on" : ISODate("2019-01-14T19:58:50.653Z")
+}
+{
+	"_id" : ObjectId("5c3cd61cc25ceb17a3c30777"),
+	"name" : "Gabe",
+	"home_state" : "West Virginia",
+	"lucky_number" : 0,
+	"birthday" : {
+		"month" : 9,
+		"day" : 12,
+		"year" : 1966
+	},
+	"interests" : [
+		"coding",
+		"brunch",
+		"MongoDB"
+	],
+	"total_belts_earned" : 1,
+	"updated_on" : ISODate("2019-01-14T19:58:50.653Z")
+}
+{
+	"_id" : ObjectId("5c3cd696c25ceb17a3c30778"),
+	"name" : "Harold",
+	"home_state" : "Washington",
+	"lucky_number" : 100,
+	"birthday" : {
+		"month" : 7,
+		"day" : 2,
+		"year" : 1920
+	},
+	"interests" : [
+		"coding",
+		"brunch",
+		"MongoDB"
+	],
+	"total_belts_earned" : 1,
+	"updated_on" : ISODate("2019-01-14T19:58:50.653Z")
+}
+>
